@@ -2,17 +2,17 @@
  * Created by jacobsamar on 12/7/16.
  */
 
-public class ChoiceMove {
-    public static final int NORMAL_MOVE = 1;
-    public static final int CAPTURE_MOVE = 2;
-    public static final int ENPASSANT_CAPTURE = 3;
-    public static final int CASTLING_KINGSIDE = 4;
-    public static final int CASTLING_QUEENSIDE = 5;
-    public static final int PROMOTE_PAWN = 6;
-    public static int bishop[][][];       // 3rd array, is the direction of motion
-    public static int king[][];           // clockwise rotation
-    public static int knight[][];         // rook: 0    bishop: 3       0
-    public static int rook[][][];         //   3 piece 1          piece
+public class ChoiceMove extends ChessBoard  {
+    protected static final int NORMAL_MOVE = 1;
+    protected static final int CAPTURE_MOVE = 2;
+    protected static final int ENPASSANT_CAPTURE = 3;
+    protected static final int CASTLING_KINGSIDE = 4;
+    protected static final int CASTLING_QUEENSIDE = 5;
+    protected static final int PROMOTE_PAWN = 6;
+    protected static int bishop[][][];       // 3rd array, is the direction of motion
+    protected static int king[][];           // clockwise rotation
+    protected static int knight[][];         // rook: 0    bishop: 3       0
+    protected static int rook[][][];         //   3 piece 1          piece
     static int sourceSquare;              //       2            2       1     That doesnt work for all but ehh
     static int destinationSquare;         // useful for breaking off blocked paths of motion
     static int thePiece;
@@ -49,7 +49,7 @@ public class ChoiceMove {
         rook[0][0][4] = 5;
         rook[0][0][5] = 6;
         rook[0][0][6] = 7;
-        rook[0][0][0] = 8;
+        rook[0][1][0] = 8;
         rook[0][1][1] = 16;
         rook[0][1][2] = 24;
         rook[0][1][3] = 32;
@@ -1135,7 +1135,7 @@ public class ChoiceMove {
         rook[55][2][4] = 15;
         rook[55][2][5] = 7;
 
-        rook[56] = new int[3][];
+        rook[56] = new int[2][];
         rook[56][0] = new int[7];
         rook[56][0][0] = 57;
         rook[56][0][1] = 58;
@@ -1198,9 +1198,9 @@ public class ChoiceMove {
         rook[59][0][2] = 62;
         rook[59][0][3] = 63;
         rook[59][1] = new int[3];
-        rook[59][1][0] = 60;
-        rook[59][1][1] = 61;
-        rook[59][1][2] = 62;
+        rook[59][1][0] = 58;
+        rook[59][1][1] = 57;
+        rook[59][1][2] = 56;
         rook[59][2] = new int[7];
         rook[59][2][0] = 51;
         rook[59][2][1] = 43;
@@ -1275,97 +1275,112 @@ public class ChoiceMove {
         rook[63][0][4] = 58;
         rook[63][0][5] = 57;
         rook[63][0][6] = 56;
-        rook[63][1][0] = 54;
-        rook[63][1][1] = 46;
-        rook[63][1][2] = 38;
-        rook[63][1][3] = 30;
-        rook[63][1][4] = 22;
-        rook[63][1][5] = 14;
-        rook[63][1][6] = 6;
+        rook[63][1][0] = 55;
+        rook[63][1][1] = 47;
+        rook[63][1][2] = 39;
+        rook[63][1][3] = 31;
+        rook[63][1][4] = 23;
+        rook[63][1][5] = 15;
+        rook[63][1][6] = 7;
 
 
+        bishop[0] = new int[1][];
+        bishop[0][0] = new int [7];
+        bishop[0][0][0] = 9;
+        bishop[0][0][1] = 18;
+        bishop[0][0][2] = 27;
+        bishop[0][0][3] = 36;
+        bishop[0][0][4] = 45;
+        bishop[0][0][5] = 54;
+        bishop[0][0][6] = 63;
+
+        bishop[1] = new int[2][];
+        bishop[1][0] = new int[6];
+        bishop[1][0][0] = 10;
+        bishop[1][0][1] = 19;
+        bishop[1][0][2] = 28;
+        bishop[1][0][3] = 37;
+        bishop[1][0][4] = 46;
+        bishop[1][0][5] = 55;
+        bishop[1][1] = new int[1];
+        bishop[1][1][0] = 8;
+
+        bishop[2] = new int[2][];
+        bishop[2][0] = new int[5];
+        bishop[2][0][0] = 11;
+        bishop[2][0][1] = 20;
+        bishop[2][0][2] = 29;
+        bishop[2][0][3] = 38;
+        bishop[2][0][4] = 47;
+        bishop[2][1] = new int[2];
+        bishop[2][1][0] = 9;
+        bishop[2][1][1] = 16;
+
+        bishop[3] = new int[2][];
+        bishop[3][0] = new int[4];
+        bishop[3][0][0] = 12;
+        bishop[3][0][1] = 21;
+        bishop[3][0][2] = 30;
+        bishop[3][0][3] = 39;
+        bishop[3][1] = new int[3];
+        bishop[3][1][0] = 10;
+        bishop[3][1][1] = 17;
+        bishop[3][1][2] = 24;
+
+        bishop[4] = new int[2][];
+        bishop[4][0] = new int[4];
+        bishop[4][0][0] = 11;
+        bishop[4][0][1] = 18;
+        bishop[4][0][2] = 25;
+        bishop[4][0][3] = 32;
+        bishop[4][1] = new int[3];
+        bishop[4][1][0] = 13;
+        bishop[4][1][1] = 22;
+        bishop[4][1][2] = 31;
+
+        bishop[5] = new int[2][];
+        bishop[5][0] = new int[5];
+        bishop[5][0][0] = 12;
+        bishop[5][0][1] = 19;
+        bishop[5][0][2] = 26;
+        bishop[5][0][3] = 33;
+        bishop[5][0][4] = 40;
+        bishop[5][1] = new int[2];
+        bishop[5][1][0] = 14;
+        bishop[5][1][1] = 23;
+
+        bishop[6] = new int[2][];
+        bishop[6][0] = new int[6];
+        bishop[6][0][0] = 13;
+        bishop[6][0][1] = 20;
+        bishop[6][0][2] = 27;
+        bishop[6][0][3] = 34;
+        bishop[6][0][4] = 41;
+        bishop[6][0][5] = 48;
+        bishop[6][1] = new int[1];
+        bishop[6][1][0] = 15;
+
+
+        bishop[7] = new int[1][7];
+        bishop[7][0][0] = 14;
+        bishop[7][0][1] = 21;
+        bishop[7][0][2] = 28;
+        bishop[7][0][3] = 35;
+        bishop[7][0][4] = 42;
+        bishop[7][0][5] = 49;
+        bishop[7][0][6] = 56;
+
+        bishop[8] = new int[2][];
+        bishop[8][0] = new int[1];
+        bishop[8][0][0] = 1;
+        bishop[8][1] = new int[6];
+        bishop[8][1][0] = 17;
+        bishop[8][1][1] = 26;
+        bishop[8][1][2] = 35;
+        bishop[8][1][3] = 44;
+        bishop[8][1][4] = 53;
+        bishop[8][1][5] = 62;
 /*
-        bishop[0] = new int [7];
-        bishop[0][0] = 9;
-        bishop[0][1] = 18;
-        bishop[0][2] = 27;
-        bishop[0][3] = 36;
-        bishop[0][4] = 45;
-        bishop[0][5] = 54;
-        bishop[0][6] = 63;
-
-        bishop[1] = new int[7];
-        bishop[1][0] = 8;
-        bishop[1][1] = 10;
-        bishop[1][2] = 19;
-        bishop[1][3] = 28;
-        bishop[1][4] = 37;
-        bishop[1][5] = 46;
-        bishop[1][6] = 55;
-
-        bishop[2] = new int[7];
-        bishop[2][0] = 9;
-        bishop[2][1] = 16;
-        bishop[2][2] = 11;
-        bishop[2][3] = 20;
-        bishop[2][4] = 29;
-        bishop[2][5] = 38;
-        bishop[2][6] = 37;
-
-        bishop[3] = new int[7];
-        bishop[3][0] = 10;
-        bishop[3][1] = 17;
-        bishop[3][2] = 24;
-        bishop[3][3] = 12;
-        bishop[3][4] = 21;
-        bishop[3][5] = 30;
-        bishop[3][6] = 39;
-
-        bishop[4] = new int[7];
-        bishop[4][0] = 11;
-        bishop[4][1] = 18;
-        bishop[4][2] = 25;
-        bishop[4][3] = 32;
-        bishop[4][4] = 13;
-        bishop[4][5] = 22;
-        bishop[4][6] = 31;
-
-        bishop[5] = new int[7];
-        bishop[5][0] = 12;
-        bishop[5][1] = 19;
-        bishop[5][2] = 26;
-        bishop[5][3] = 33;
-        bishop[5][4] = 40;
-        bishop[5][5] = 14;
-        bishop[5][6] = 23;
-
-        bishop[6] = new int[7];
-        bishop[6][0] = 15;
-        bishop[6][1] = 13;
-        bishop[6][2] = 20;
-        bishop[6][3] = 27;
-        bishop[6][4] = 34;
-        bishop[6][5] = 41;
-        bishop[6][6] = 48;
-
-        bishop[7] = new int[7];
-        bishop[7][0] = 14;
-        bishop[7][1] = 21;
-        bishop[7][2] = 28;
-        bishop[7][3] = 35;
-        bishop[7][4] = 42;
-        bishop[7][5] = 49;
-        bishop[7][6] = 56;
-
-        bishop[8] = new int[7];
-        bishop[8][0] = 1;
-        bishop[8][1] = 17;
-        bishop[8][2] = 26;
-        bishop[8][3] = 35;
-        bishop[8][4] = 44;
-        bishop[8][5] = 53;
-        bishop[8][6] = 62;
-
         bishop[9] = new int[9];
         bishop[9][0] = 2;
         bishop[9][1] = 16;
@@ -1904,79 +1919,91 @@ public class ChoiceMove {
         bishop[55][4] = 37;
         bishop[55][5] = 46;
         bishop[55][6] = 62;
-
-        bishop[56] = new int[7];
-        bishop[56][0] = 7;
-        bishop[56][1] = 14;
-        bishop[56][2] = 21;
-        bishop[56][3] = 28;
-        bishop[56][4] = 35;
-        bishop[56][5] = 42;
-        bishop[56][6] = 49;
-
-        bishop[57] = new int[7];
-        bishop[57][0] = 48;
-        bishop[57][1] = 15;
-        bishop[57][2] = 22;
-        bishop[57][3] = 29;
-        bishop[57][4] = 36;
-        bishop[57][5] = 43;
-        bishop[57][6] = 50;
-
-        bishop[58] = new int[7];
-        bishop[58][0] = 40;
-        bishop[58][1] = 49;
-        bishop[58][2] = 23;
-        bishop[58][3] = 30;
-        bishop[58][4] = 37;
-        bishop[58][5] = 44;
-        bishop[58][6] = 51;
-
-        bishop[59] = new int[7];
-        bishop[59][0] = 32;
-        bishop[59][1] = 41;
-        bishop[59][2] = 50;
-        bishop[59][3] = 31;
-        bishop[59][4] = 38;
-        bishop[59][5] = 45;
-        bishop[59][6] = 52;
-
-        bishop[60] = new int[7];
-        bishop[60][0] = 24;
-        bishop[60][1] = 33;
-        bishop[60][2] = 42;
-        bishop[60][3] = 51;
-        bishop[60][4] = 39;
-        bishop[60][5] = 46;
-        bishop[60][6] = 53;
-
-        bishop[61] = new int[7];
-        bishop[61][0] = 16;
-        bishop[61][1] = 25;
-        bishop[61][2] = 34;
-        bishop[61][3] = 43;
-        bishop[61][4] = 52;
-        bishop[61][5] = 47;
-        bishop[61][6] = 54;
-
-        bishop[62] = new int[7];
-        bishop[62][0] = 8;
-        bishop[62][1] = 17;
-        bishop[62][2] = 26;
-        bishop[62][3] = 35;
-        bishop[62][4] = 44;
-        bishop[62][5] = 53;
-        bishop[62][6] = 55;
-
-        bishop[63] = new int[7];
-        bishop[63][0] = 0;
-        bishop[63][1] = 9;
-        bishop[63][2] = 18;
-        bishop[63][3] = 27;
-        bishop[63][4] = 36;
-        bishop[63][5] = 45;
-        bishop[63][6] = 54;
 */
+        bishop[56] = new int[1][7];
+        bishop[56][0][0] = 49;
+        bishop[56][0][1] = 42;
+        bishop[56][0][2] = 35;
+        bishop[56][0][3] = 28;
+        bishop[56][0][4] = 21;
+        bishop[56][0][5] = 14;
+        bishop[56][0][6] = 7;
+
+        bishop[57] = new int[2][];
+        bishop[57][0] = new int[1];
+        bishop[57][0][0] = 48;
+        bishop[57][1] = new int[6];
+        bishop[57][1][0] = 50;
+        bishop[57][1][1] = 43;
+        bishop[57][1][2] = 36;
+        bishop[57][1][3] = 29;
+        bishop[57][1][4] = 22;
+        bishop[57][1][5] = 15;
+
+        bishop[58] = new int[2][];
+        bishop[58][0] = new int[2];
+        bishop[58][0][0] = 49;
+        bishop[58][0][1] = 40;
+        bishop[58][1] = new int[5];
+        bishop[58][1][0] = 51;
+        bishop[58][1][1] = 44;
+        bishop[58][1][2] = 37;
+        bishop[58][1][3] = 30;
+        bishop[58][1][4] = 23;
+
+        bishop[59] = new int[2][];
+        bishop[59][0] = new int[3];
+        bishop[59][0][0] = 50;
+        bishop[59][0][1] = 41;
+        bishop[59][0][2] = 32;
+        bishop[59][1] = new int[4];
+        bishop[59][1][0] = 52;
+        bishop[59][1][1] = 45;
+        bishop[59][1][2] = 38;
+        bishop[59][1][3] = 31;
+
+        bishop[60] = new int[2][];
+        bishop[60][0] = new int[4];
+        bishop[60][0][0] = 51;
+        bishop[60][0][1] = 42;
+        bishop[60][0][2] = 33;
+        bishop[60][0][3] = 24;
+        bishop[60][1] = new int[3];
+        bishop[60][1][0] = 53;
+        bishop[60][1][1] = 46;
+        bishop[60][1][2] = 39;
+
+        bishop[61] = new int[2][];
+        bishop[61][0] = new int[5];
+        bishop[61][0][0] = 52;
+        bishop[61][0][1] = 43;
+        bishop[61][0][2] = 34;
+        bishop[61][0][3] = 25;
+        bishop[61][0][4] = 16;
+        bishop[61][1] = new int[2];
+        bishop[61][1][0] = 54;
+        bishop[61][1][1] = 47;
+
+        bishop[62] = new int[2][];
+        bishop[62][0] = new int[6];
+        bishop[62][0][0] = 53;
+        bishop[62][0][1] = 44;
+        bishop[62][0][2] = 35;
+        bishop[62][0][3] = 26;
+        bishop[62][0][4] = 17;
+        bishop[62][0][5] = 8;
+        bishop[62][1] = new int[1];
+        bishop[62][1][0] = 55;
+
+        bishop[63] = new int[1][7];
+        bishop[63][0][0] = 54;
+        bishop[63][0][1] = 45;
+        bishop[63][0][2] = 36;
+        bishop[63][0][3] = 27;
+        bishop[63][0][4] = 18;
+        bishop[63][0][5] = 9;
+        bishop[63][0][6] = 0;
+
 
         king[0] = new int [3];
         king[0][0] = 1;

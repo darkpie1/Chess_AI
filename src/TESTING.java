@@ -7,10 +7,14 @@ public class TESTING {
     static ChessBoard board = new ChessBoard();
     static ChoiceMove choice = new ChoiceMove();
     static HumanPlayer human = new HumanPlayer();
+    static BoardStates states = new BoardStates();
 
     public static void main(String args[]) {
 
         boolean test = false;
+
+
+
         board.MakeBoard();
                 while(!test) {
                     board.PrintBoard();
@@ -19,10 +23,12 @@ public class TESTING {
                     board.MakeMove();
                     board.PrintBoard();
                     choice.clear();
-                    test = true;
+                    states.makeAttackedSquares();
+                    states.printBoard();
+                    test = false;
                     System.out.println("Continue? Enter 1");
                     if(HumanPlayer.scan.nextInt() == 1)
-                        test = false;
+                        test = true;
                   //  HumanPlayer.validChoice = false;
                 }
     }

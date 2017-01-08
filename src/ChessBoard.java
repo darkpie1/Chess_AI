@@ -1,38 +1,41 @@
 import java.awt.*;
 import java.util.ArrayDeque;
+import java.util.*;
 
 /**
  * Created by jacobsamar on 12/5/16.
  */
 public class ChessBoard {
 
-    public static final int WHITE_PAWN = 0;
-    public static final int WHITE_KNIGHT = 2;
-    public static final int WHITE_BISHOP = 4;
-    public static final int WHITE_ROOK = 6;
-    public static final int WHITE_QUEEN = 8;
-    public static final int WHITE_KING = 10;
-    public static final int BLACK_PAWN = 1;
-    public static final int BLACK_KNIGHT = 3;
-    public static final int BLACK_BISHOP = 5;
-    public static final int BLACK_ROOK = 7;
-    public static final int BLACK_QUEEN = 9;
-    public static final int BLACK_KING = 11;
-    public static final int EMPTY_SQUARE = 12;
+    protected static final int WHITE_PAWN = 0;
+    protected static final int WHITE_KNIGHT = 2;
+    protected static final int WHITE_BISHOP = 4;
+    protected static final int WHITE_ROOK = 6;
+    protected static final int WHITE_QUEEN = 8;
+    protected static final int WHITE_KING = 10;
+    protected static final int BLACK_PAWN = 1;
+    protected static final int BLACK_KNIGHT = 3;
+    protected static final int BLACK_BISHOP = 5;
+    protected static final int BLACK_ROOK = 7;
+    protected static final int BLACK_QUEEN = 9;
+    protected static final int BLACK_KING = 11;
+    protected static final int EMPTY_SQUARE = 12;
 
-    public static final int ALL_PIECES = 12;
-    public static final int ALL_SQUARES = 64;
-    public static final int WHITE_PIECES = 12;
-    public static final int BLACK_PIECES = 13;
-    public static final int ALL_BITBOARDS = 14;
+    protected static final int ALL_PIECES = 12;
+    protected static final int ALL_SQUARES = 64;
+    protected static final int WHITE_PIECES = 12;
+    protected static final int BLACK_PIECES = 13;
+    protected static final int ALL_BITBOARDS = 14;
 
-    public static int whosTurn, capturedpiece;
-    public static long SquareBits[];
+    protected static int whosTurn, capturedpiece, currentplayer = 0; // change back after testing
+    protected static long SquareBits[];
     private long BitBoard[];
 
     private int MaterialValue[];
     private int NumPawns[];
     private static int PieceValues[];
+    protected int AIcolor = 1;    // black for now, needs to change for games
+    protected int humancolor = 0; //
 
     static {
         SquareBits = new long[ALL_SQUARES];
@@ -120,10 +123,16 @@ public class ChessBoard {
                 break;
 
         }
+       /* if(currentplayer % 2 == 1) {
+            currentplayer = 0;
+        }else{
+            currentplayer = 1;
+        }*/ // implement later after testing movements
     }
 
     public long[] copyBoard() {
-        return(BitBoard);
+        return BitBoard;
+
     }
 
     public void PrintBoard() {
@@ -153,6 +162,7 @@ public class ChessBoard {
         // update both bitboards
         BitBoard[whichPiece] |= SquareBits[whichSquare];
         BitBoard[ALL_PIECES + (whichPiece % 2)] |= SquareBits[whichSquare];
+       // BitBoard[ALL_BITBOARDS] |= SquareBits[whichSquare];
 
         //update the material evalutation
         MaterialValue[whichPiece % 2] += PieceValues[whichPiece];
@@ -165,6 +175,7 @@ public class ChessBoard {
     public boolean RemovePiece( int whichSquare, int whichPiece) {
         BitBoard[whichPiece] ^= SquareBits[whichSquare];
         BitBoard[ALL_PIECES + (whichPiece % 2)] ^= SquareBits[whichSquare];
+      //  BitBoard[ALL_BITBOARDS] ^= SquareBits[whichSquare];
 
         // update the material evalutation
         MaterialValue[whichPiece % 2] -= PieceValues[whichPiece];
@@ -173,6 +184,21 @@ public class ChessBoard {
         else if (whichPiece == BLACK_PAWN)
             NumPawns[1]--;
         return true;
+    }
+//
+    // Find the location of pawns for the AI
+    public ArrayList findPawns(int color) {
+        ArrayList<Integer> locations = new ArrayList<>();
+        int pawns = 0;
+      // black for now needs to be changed based on game
+        for(int i = 8; i < 56; i++) {
+            if((BitBoard[(WHITE_PAWN + color)] & SquareBits[i]) != 0 ) {
+               pawns++;
+               locations.add(i);
+            }
+            if(pawns == NumPawns[color]) return locations;
+        }
+        return locations;
     }
 
     // Find what piece is on a square.

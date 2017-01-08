@@ -12,8 +12,8 @@ public class HumanPlayer {
     public static int[] moveSpots; // 0 index is source square, 1 is destination
     public static long[] BitBoardCopy;
     public boolean validChoice = false;
-    public static int humanColor = 0;
-    public static int AIColor = 1;
+    public static int humanColor = 0; // needs a method to decide this when the game begins
+    public static int AIColor = 1; // needs a method to decide this when the game begins
     public static int movingpiece;
     public static int movetype;
     static Scanner scan = new Scanner(System.in);
@@ -36,19 +36,55 @@ public class HumanPlayer {
         validChoice = false;
         while (!validChoice) {
             enterMove();
+            if(isPawnMove() > 0){ // have to set movetype in isPawnMove, check if its a valid move,
+                movetype = isPawnMove();
+                return;
+            }
             movetype = validateMove();
             if (movetype > 0)
                 validChoice = true;
         }
     }
 
-    public void enterMove() {
+    private int isPawnMove() {
+        BitBoardCopy = test.giveCurrentBoard();
+        if(moveSpots[1] > 63 || moveSpots[1] < 0 || moveSpots[0] > 63 || moveSpots[0] < 0)
+            return 0;
+        if((ChessBoard.SquareBits[moveSpots[0]] & BitBoardCopy[ChessBoard.WHITE_PAWN + ChessBoard.currentplayer]) == 0) {
+            return 0;
+        }
+        movingpiece = ChessBoard.WHITE_PAWN + ChessBoard.currentplayer;
+
+        if(moveSpots[1]  - moveSpots[0] + 16 * ChessBoard.currentplayer == -8) { // normal move and promote
+            if((BitBoardCopy[ChessBoard.ALL_PIECES] & ChessBoard.SquareBits[moveSpots[1]]) != 0 ||
+                    (BitBoardCopy[ChessBoard.ALL_PIECES + 1] & ChessBoard.SquareBits[moveSpots[1]]) != 0)
+                return 0;
+            if(moveSpots[1] < 8 && moveSpots[1] > 55)
+                return ChoiceMove.PROMOTE_PAWN;
+            return ChoiceMove.NORMAL_MOVE;
+        }
+        if(Math.abs(moveSpots[1] - moveSpots[0]) == 16 && ((moveSpots[0] > 47 && moveSpots[0] < 56) || (moveSpots[0] > 7 && moveSpots[0] < 16))) {// checking for double
+            if(((BitBoardCopy[ChessBoard.ALL_PIECES] & ChessBoard.SquareBits[moveSpots[1]]) != 0 &&
+                    (BitBoardCopy[ChessBoard.ALL_PIECES] & ChessBoard.SquareBits[moveSpots[1] - 8 + 16 * ChessBoard.currentplayer]) != 0) )
+                return 0;
+            return ChoiceMove.NORMAL_MOVE;
+        }
+        if(moveSpots[1] % 2 != moveSpots[0] % 2 && FindPiece(moveSpots[1]) < 12 && FindPiece(moveSpots[1]) != ChessBoard.currentplayer % 2) { // cpture and promote
+            if(moveSpots[1] < 8 && moveSpots[1] > 55)
+                return ChoiceMove.PROMOTE_PAWN;
+            return ChoiceMove.CAPTURE_MOVE;
+        }
+        // add enPassant later if i feel like it
+        return 0;
+    }
+
+    private void enterMove() {
         System.out.println("What move do you wish to make \n(Format: source square then destination square)");
         moveSpots[0] = scan.nextInt();
         moveSpots[1] = scan.nextInt();
     }
 
-    public int validateMove() {
+    private int validateMove() { // does not currently check if it would put the player in check.
         boolean possible = false;
         BitBoardCopy = test.giveCurrentBoard();
         movingpiece = FindPiece(moveSpots[0]);
@@ -107,6 +143,38 @@ public class HumanPlayer {
             }
         } // end of rook moves
 
+        // bishop
+        if(movingpiece == ChessBoard.WHITE_QUEEN || movingpiece == ChessBoard.BLACK_QUEEN) {
+            search:
+            for (int j = 0; j < ChoiceMove.bishop[moveSpots[0]].length; j++) {
+                for (int k = 0; k < ChoiceMove.bishop[moveSpots[0]][j].length; k++) {
+                    if(moveSpots[1] == ChoiceMove.bishop[moveSpots[0]][j][k]) {
+                        possible = true;
+                        break search;
+                    }
+                    if ((ChessBoard.SquareBits[moveSpots[1]] & BitBoardCopy[12 + humanColor]) != 0){
+                        break;
+                    }
+                    if ((ChessBoard.SquareBits[moveSpots[1]] & BitBoardCopy[12 + AIColor]) != 0)
+                        break;
+                }
+            }
+            search:
+            for (int j = 0; j < ChoiceMove.rook[moveSpots[0]].length; j++) {
+                for (int k = 0; k < ChoiceMove.rook[moveSpots[0]][j].length; k++) {
+                    if(moveSpots[1] == ChoiceMove.rook[moveSpots[0]][j][k]) {
+                        possible = true;
+                        break search;
+                    }
+                    if ((ChessBoard.SquareBits[moveSpots[1]] & BitBoardCopy[12 + humanColor]) != 0){
+                        break;
+                    }
+                    if ((ChessBoard.SquareBits[moveSpots[1]] & BitBoardCopy[12 + AIColor]) != 0)
+                        break;
+                }
+            }
+        } // end of queen moves
+
         // need this loop for all pieces and then this if
         if (!possible) {
             System.out.println("Not a valid move for that piece");
@@ -119,13 +187,11 @@ public class HumanPlayer {
         if ((ChessBoard.SquareBits[moveSpots[1]] & BitBoardCopy[12 + AIColor]) != 0)
             return ChoiceMove.CAPTURE_MOVE;
         return ChoiceMove.NORMAL_MOVE;
-    }
+    }// end of validating move
 
-    public int FindPiece(int location) {
+    private int FindPiece(int location) {
         if((BitBoardCopy[ChessBoard.BLACK_PAWN] & ChessBoard.SquareBits[location]) != 0)
             return(ChessBoard.BLACK_PAWN);
-        if((BitBoardCopy[ChessBoard.WHITE_PAWN] & ChessBoard.SquareBits[location]) != 0)
-            return(ChessBoard.WHITE_PAWN);
         if((BitBoardCopy[ChessBoard.BLACK_KNIGHT] & ChessBoard.SquareBits[location]) != 0)
             return(ChessBoard.BLACK_KNIGHT);
         if((BitBoardCopy[ChessBoard.BLACK_BISHOP] & ChessBoard.SquareBits[location]) != 0)
@@ -146,7 +212,9 @@ public class HumanPlayer {
             return(ChessBoard.WHITE_KING);
         if((BitBoardCopy[ChessBoard.WHITE_QUEEN] & ChessBoard.SquareBits[location]) != 0)
             return(ChessBoard.WHITE_QUEEN);
-        return (-125);
+        if((BitBoardCopy[ChessBoard.WHITE_PAWN] & ChessBoard.SquareBits[location]) != 0)
+            return(ChessBoard.WHITE_PAWN);
+        return (125);
     }
 }
 
