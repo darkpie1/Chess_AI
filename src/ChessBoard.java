@@ -116,10 +116,54 @@ public class ChessBoard {
                 } */
                 break;
             case ChoiceMove.CASTLING_QUEENSIDE:
+                if(currentplayer == 1) {
+                    RemovePiece(ChoiceMove.sourceSquare, ChoiceMove.thePiece);
+                    AddPiece(ChoiceMove.destinationSquare, ChoiceMove.thePiece);
+                    RemovePiece(56, WHITE_ROOK + currentplayer);
+                    AddPiece(ChoiceMove.destinationSquare + 1, WHITE_ROOK + currentplayer);
+                }else{
+                    RemovePiece(ChoiceMove.sourceSquare, ChoiceMove.thePiece);
+                    AddPiece(ChoiceMove.destinationSquare, ChoiceMove.thePiece);
+                    RemovePiece(0, WHITE_ROOK + currentplayer);
+                    AddPiece(ChoiceMove.destinationSquare + 1, WHITE_ROOK + currentplayer);
+                }
                 break;
             case ChoiceMove.CASTLING_KINGSIDE:
+                if(currentplayer == 1) {
+                    RemovePiece(ChoiceMove.sourceSquare, ChoiceMove.thePiece);
+                    AddPiece(ChoiceMove.destinationSquare, ChoiceMove.thePiece);
+                    RemovePiece(63, WHITE_ROOK + currentplayer);
+                    AddPiece(ChoiceMove.destinationSquare - 1, WHITE_ROOK + currentplayer);
+                }else{
+                    RemovePiece(ChoiceMove.sourceSquare, ChoiceMove.thePiece);
+                    AddPiece(ChoiceMove.destinationSquare, ChoiceMove.thePiece);
+                    RemovePiece(7, WHITE_ROOK + currentplayer);
+                    AddPiece(ChoiceMove.destinationSquare - 1, WHITE_ROOK + currentplayer);
+                }
                 break;
             case ChoiceMove.PROMOTE_PAWN:
+                if(currentplayer == humancolor) {
+                    RemovePiece(ChoiceMove.sourceSquare, ChoiceMove.thePiece);
+                    int piece = whichPromote();
+                    AddPiece(ChoiceMove.destinationSquare, piece);
+                }else {
+                    RemovePiece(ChoiceMove.sourceSquare, ChoiceMove.thePiece);
+                    AddPiece(ChoiceMove.destinationSquare, WHITE_QUEEN + 1);
+                }
+                break;
+            case ChoiceMove.PRO_CAP_PAWN:
+                if(currentplayer == humancolor) {
+                    capturedpiece = FindPiece(ChoiceMove.destinationSquare);
+                    RemovePiece(ChoiceMove.sourceSquare, ChoiceMove.thePiece);
+                    RemovePiece(ChoiceMove.destinationSquare, capturedpiece);
+                    int piece = whichPromote();
+                    AddPiece(ChoiceMove.destinationSquare, piece);
+                }else {
+                    capturedpiece = FindPiece(ChoiceMove.destinationSquare);
+                    RemovePiece(ChoiceMove.sourceSquare, ChoiceMove.thePiece);
+                    RemovePiece(ChoiceMove.destinationSquare, capturedpiece);
+                    AddPiece(ChoiceMove.destinationSquare, WHITE_QUEEN + currentplayer);
+                }
                 break;
 
         }
@@ -128,6 +172,13 @@ public class ChessBoard {
         }else{
             currentplayer = 1;
         }*/ // implement later after testing movements
+    }
+
+    private int whichPromote() {
+        Scanner scan = new Scanner(System.in);
+        System.out.print("What to promote to? ");
+        int p = scan.nextInt();
+        return p;
     }
 
     public long[] copyBoard() {

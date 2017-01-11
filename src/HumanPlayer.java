@@ -48,8 +48,6 @@ public class HumanPlayer {
 
     private int isPawnMove() {
         BitBoardCopy = test.giveCurrentBoard();
-        if(moveSpots[1] > 63 || moveSpots[1] < 0 || moveSpots[0] > 63 || moveSpots[0] < 0)
-            return 0;
         if((ChessBoard.SquareBits[moveSpots[0]] & BitBoardCopy[ChessBoard.WHITE_PAWN + ChessBoard.currentplayer]) == 0) {
             return 0;
         }
@@ -69,9 +67,10 @@ public class HumanPlayer {
                 return 0;
             return ChoiceMove.NORMAL_MOVE;
         }
-        if(moveSpots[1] % 2 != moveSpots[0] % 2 && FindPiece(moveSpots[1]) < 12 && FindPiece(moveSpots[1]) != ChessBoard.currentplayer % 2) { // cpture and promote
-            if(moveSpots[1] < 8 && moveSpots[1] > 55)
-                return ChoiceMove.PROMOTE_PAWN;
+        if(moveSpots[1] % 2 != moveSpots[0] % 2 && FindPiece(moveSpots[1]) < 12 && FindPiece(moveSpots[1]) != ChessBoard.currentplayer % 2
+                && Math.abs(moveSpots[0] - moveSpots[1]) > 1) { // cpture and promote
+            if(moveSpots[1] < 8 || moveSpots[1] > 55)
+                return ChoiceMove.PRO_CAP_PAWN;
             return ChoiceMove.CAPTURE_MOVE;
         }
         // add enPassant later if i feel like it
@@ -79,9 +78,18 @@ public class HumanPlayer {
     }
 
     private void enterMove() {
-        System.out.println("What move do you wish to make \n(Format: source square then destination square)");
-        moveSpots[0] = scan.nextInt();
-        moveSpots[1] = scan.nextInt();
+        boolean done = false;
+        while (!done) {
+            System.out.println("What move do you wish to make \n(Format: source square then destination square)");
+            moveSpots[0] = scan.nextInt();
+            moveSpots[1] = scan.nextInt();
+            if (moveSpots[1] > 63 || moveSpots[1] < 0 || moveSpots[0] > 63 || moveSpots[0] < 0) {
+
+            } else {
+                done = true;
+            }
+        }
+
     }
 
     private int validateMove() { // does not currently check if it would put the player in check.
@@ -175,7 +183,7 @@ public class HumanPlayer {
             }
         } // end of queen moves
 
-        // need this loop for all pieces and then this if
+
         if (!possible) {
             System.out.println("Not a valid move for that piece");
             return -1;

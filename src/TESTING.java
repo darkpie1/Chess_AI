@@ -26,7 +26,7 @@ public class TESTING {
                     states.makeAttackedSquares();
                     states.printBoard();
                     test = false;
-                    System.out.println("Continue? Enter 1");
+                    System.out.println("Quit? Enter 1");
                     if(HumanPlayer.scan.nextInt() == 1)
                         test = true;
                   //  HumanPlayer.validChoice = false;
